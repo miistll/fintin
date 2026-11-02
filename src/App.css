@@ -1,0 +1,390 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #101c19;
+  font-family: Arial, sans-serif;
+  color: white;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 22px 16px;
+  background: #101c19;
+}
+
+/* ШАПКА */
+
+.header {
+  margin-bottom: 22px;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 18px;
+}
+
+.logo span {
+  color: #55e5b1;
+}
+
+.greeting h2 {
+  font-size: 25px;
+  font-weight: 800;
+  margin-bottom: 2px;
+}
+
+.greeting p {
+  color: #55e5b1;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* КАЛЕНДАРЬ */
+
+.calendar {
+  width: 100%;
+  margin-top: 24px;
+  padding: 13px 10px;
+  border: 2px solid #65eac0;
+  border-radius: 19px;
+  background: #142722;
+}
+
+.calendar-days {
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+}
+
+.calendar-day {
+  flex: 1;
+  min-width: 0;
+  height: 43px;
+  border: none;
+  border-radius: 12px;
+  background: #d5d9d1;
+  color: #26352e;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+}
+
+.calendar-day span {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.calendar-day strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.calendar-day.active {
+  background: #54e5ad;
+  color: white;
+  box-shadow: 0 0 10px #54e5ad55;
+}
+
+/* ТВОИ ФИНАНСЫ */
+
+.finance-card {
+  width: 100%;
+  margin-top: 12px;
+  padding: 18px 12px;
+  border: 2px solid #55e5b1;
+  border-radius: 20px;
+  background: #142722;
+}
+
+.finance-title {
+  color: white;
+  font-size: 19px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.finance-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.finance-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.finance-info strong {
+  font-size: 18px;
+}
+
+.expense-info {
+  color: #ff626b;
+}
+
+.income-info {
+  color: #55e5a5;
+}
+
+.finance-chart {
+  width: 145px;
+  height: 145px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: conic-gradient(
+    #55e5a5 0deg 180deg,
+    #ff626b 180deg 360deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.chart-center {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: #142722;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.chart-center span {
+  color: white;
+  font-size: 12px;
+}
+
+.chart-center strong {
+  color: #55e5b1;
+  font-size: 17px;
+}
+
+/* ДОХОДЫ И РАСХОДЫ */
+
+.operations {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.operation-card {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 13px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #142722;
+}
+
+.income-card {
+  border: 2px solid #55e5a5;
+  color: #55e5a5;
+}
+
+.expense-card {
+  border: 2px solid #ff626b;
+  color: #ff626b;
+}
+
+.operation-card span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.operation-card h3 {
+  font-size: 19px;
+  margin-top: 12px;
+}
+
+.add-button {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+  color: #10221c;
+  font-size: 27px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.income-plus {
+  background: #55e5a5;
+}
+
+.expense-plus {
+  background: #ff626b;
+}
+
+/* КОПИЛКА */
+
+.piggy-card {
+  margin-top: 12px;
+  padding: 18px;
+  background: #142722;
+  border: 2px solid #55e5b1;
+  border-radius: 20px;
+}
+
+.piggy-title {
+  color: white;
+  font-size: 19px;
+  margin-bottom: 18px;
+}
+
+.piggy-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.piggy-image {
+  width: 115px;
+  height: 135px;
+  object-fit: contain;
+}
+
+.piggy-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.piggy-goal,
+.piggy-saved,
+.piggy-remaining {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.piggy-info span {
+  color: #b9cec5;
+  font-size: 12px;
+}
+
+.piggy-info strong {
+  color: white;
+  font-size: 14px;
+}
+
+.piggy-progress {
+  width: 100%;
+  height: 10px;
+  background: #344a42;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.piggy-progress-fill {
+  height: 100%;
+  background: #55e5b1;
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+.piggy-remaining strong {
+  color: #55e5b1;
+}
+
+.piggy-button {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px;
+  border: none;
+  border-radius: 13px;
+  background: #55e5b1;
+  color: #10251e;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+/* НИЖНЯЯ НАВИГАЦИЯ */
+
+.app {
+  padding-bottom: 110px;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 76px;
+  background: #142722;
+  border-top: 2px solid #55e5b1;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 100;
+  padding: 5px 8px;
+}
+
+.nav-item {
+  flex: 1;
+  height: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  background: transparent;
+  color: #91a69c;
+  cursor: pointer;
+}
+
+.nav-item svg {
+  width: 25px;
+  height: 25px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-item span {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nav-item.active {
+  color: #55e5b1;
+}
+
+.nav-item:active {
+  transform: scale(0.93);
+}
