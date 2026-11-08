@@ -1,21 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Savings.css";
 import piggyBank from "./assets/piggy-bank.png";
 
-export default function Savings({ onNavigate, saved, setSaved }) {
-  
-  const [goal, setGoal] = useState(0);
-  const [goalName, setGoalName] = useState("Моя мечта");
-  const [history, setHistory] = useState([]);
-
+export default function Savings({
+  onNavigate,
+  saved,
+  setSaved,
+  goal,
+  setGoal,
+  goalName,
+  setGoalName,
+  history,
+  setHistory
+}) {
   const progress = goal > 0
-   ? Math.min(100, (saved / goal) * 100) 
-   : 0;
+    ? Math.min(100, (saved / goal) * 100)
+    : 0;
 
   function addMoney() {
-    const amount = Number(prompt("Сколько рублей добавить?"));
+    const input = prompt("Сколько рублей добавить?");
 
-    if (!amount || amount <= 0) return;
+    if (input === null || input.trim() === "") return;
+
+    const amount = Number(input.replace(",", "."));
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Введите корректную сумму больше нуля.");
+      return;
+    }
+
+    const now = new Date();
 
     setSaved(prev => prev + amount);
 
@@ -23,8 +37,8 @@ export default function Savings({ onNavigate, saved, setSaved }) {
       {
         id: Date.now(),
         amount,
-        date: new Date().toLocaleDateString("ru-RU"),
-        time: new Date().toLocaleTimeString("ru-RU", {
+        date: now.toLocaleDateString("ru-RU"),
+        time: now.toLocaleTimeString("ru-RU", {
           hour: "2-digit",
           minute: "2-digit"
         })
@@ -35,10 +49,22 @@ export default function Savings({ onNavigate, saved, setSaved }) {
 
   function editGoal() {
     const name = prompt("Название цели:", goalName);
-    if (name) setGoalName(name);
 
-    const amount = Number(prompt("Сумма цели:", goal));
-    if (amount > 0) setGoal(amount);
+    if (name !== null && name.trim() !== "") {
+      setGoalName(name.trim());
+    }
+
+    const input = prompt("Сумма цели:", goal);
+
+    if (input === null || input.trim() === "") return;
+
+    const amount = Number(input.replace(",", "."));
+
+    if (Number.isFinite(amount) && amount >= 0) {
+      setGoal(amount);
+    } else {
+      alert("Введите корректную сумму.");
+    }
   }
 
   return (
@@ -50,7 +76,7 @@ export default function Savings({ onNavigate, saved, setSaved }) {
 
         <div className="greeting">
           <h2>Моя копилка</h2>
-          <p>Накопи на мечту </p>
+          <p>Каждый шаг приближает к мечте</p>
         </div>
       </header>
 
@@ -115,8 +141,6 @@ export default function Savings({ onNavigate, saved, setSaved }) {
       </section>
 
       <nav className="bottom-nav">
-
-  {/* Главная */}
   <button
     className="nav-item"
     onClick={() => onNavigate("home")}
@@ -127,19 +151,17 @@ export default function Savings({ onNavigate, saved, setSaved }) {
     <span>Главная</span>
   </button>
 
-  {/* Копилка */}
   <button className="nav-item active">
     <svg viewBox="0 0 24 24">
-  <rect x="3" y="6" width="18" height="14" rx="3" />
-  <path d="M3 9h18" />
-  <path d="M16 13h5" />
-  <circle cx="16" cy="13" r="1" />
-  <path d="M7 6V4h11v2" />
-</svg>
+      <rect x="3" y="6" width="18" height="14" rx="3" />
+      <path d="M3 9h18" />
+      <path d="M16 13h5" />
+      <circle cx="16" cy="13" r="1" />
+      <path d="M7 6V4h11v2" />
+    </svg>
     <span>Копилка</span>
   </button>
 
-  {/* Путь Фина */}
   <button
     className="nav-item"
     onClick={() => onNavigate("path")}
@@ -153,7 +175,6 @@ export default function Savings({ onNavigate, saved, setSaved }) {
     <span>Путь Фина</span>
   </button>
 
-  {/* Профиль */}
   <button
     className="nav-item"
     onClick={() => onNavigate("profile")}
@@ -164,7 +185,6 @@ export default function Savings({ onNavigate, saved, setSaved }) {
     </svg>
     <span>Профиль</span>
   </button>
-
 </nav>
     </div>
   );

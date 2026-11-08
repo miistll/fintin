@@ -7,10 +7,11 @@ import Auth from "./Auth";
 import { supabase } from "./supabaseClient";
 
 export default function App() {
-
   const today = new Date();
+
   const [activePage, setActivePage] = useState("home");
 
+  // Авторизация
   const [session, setSession] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -39,20 +40,69 @@ export default function App() {
     };
   }, []);
 
+  // Календарь
   const [selectedDate, setSelectedDate] = useState(
     today.toDateString()
   );
 
+  // Общие данные копилки
   const [savedAmount, setSavedAmount] = useState(0);
-  const [goal, setGoal] = useState(5000);
+  const [goal, setGoal] = useState(0);
   const [goalName, setGoalName] = useState("Моя мечта");
+  const [savingsHistory, setSavingsHistory] = useState([]);
 
-  const targetAmount = goal;
-  const remaining = Math.max(0, targetAmount - savedAmount);
-  const progress = targetAmount > 0
-    ? Math.min(100, (savedAmount / targetAmount) * 100)
-    : 0;
+  // Общие доходы и расходы
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
+  const [incomeHistory, setIncomeHistory] = useState([]);
+  const [expenseHistory, setExpenseHistory] = useState([]);
 
+  // Общие расчёты
+  const balance = income - expenses;
+
+  const remaining = Math.max(goal - savedAmount, 0);
+
+  const progress =
+    goal > 0
+      ? Math.min(100, (savedAmount / goal) * 100)
+      : 0;
+
+  // Добавление дохода или расхода
+  function addOperation(type) {
+    const title = type === "income" ? "дохода" : "расхода";
+    const input = prompt(`Введите сумму ${title}:`);
+
+    if (input === null || input.trim() === "") return;
+
+    const amount = Number(input.replace(",", "."));
+
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Введите корректную сумму больше нуля.");
+      return;
+    }
+
+    const now = new Date();
+
+    const operation = {
+      id: Date.now(),
+      amount,
+      date: now.toLocaleDateString("ru-RU"),
+      time: now.toLocaleTimeString("ru-RU", {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    if (type === "income") {
+      setIncome((prev) => prev + amount);
+      setIncomeHistory((prev) => [operation, ...prev]);
+    } else {
+      setExpenses((prev) => prev + amount);
+      setExpenseHistory((prev) => [operation, ...prev]);
+    }
+  }
+
+  // Дни недели
   const monday = new Date(today);
   monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
 
@@ -88,12 +138,25 @@ export default function App() {
           setGoal={setGoal}
           goalName={goalName}
           setGoalName={setGoalName}
+          history={savingsHistory}
+          setHistory={setSavingsHistory}
         />
       ) : activePage === "profile" ? (
-        <Profile onNavigate={setActivePage} />
+        <Profile
+          onNavigate={setActivePage}
+          saved={savedAmount}
+          goal={goal}
+          goalName={goalName}
+          progress={progress}
+          income={income}
+          expenses={expenses}
+          balance={balance}
+          incomeHistory={incomeHistory}
+          expenseHistory={expenseHistory}
+          savingsHistory={savingsHistory}
+        />
       ) : (
         <>
-
           {/* ШАПКА */}
 
           <header className="header">
@@ -136,45 +199,45 @@ export default function App() {
             <h2 className="finance-title">Твои финансы</h2>
 
             <div className="finance-content">
-
               <div className="finance-info expense-info">
                 <span>Расходы</span>
-                <strong>0 ₽</strong>
+                <strong>
+                  {expenses.toLocaleString("ru-RU")} ₽
+                </strong>
               </div>
 
               <div className="finance-chart">
                 <div className="chart-center">
                   <span>Баланс</span>
-                  <strong>0 ₽</strong>
+                  <strong>
+                    {balance.toLocaleString("ru-RU")} ₽
+                  </strong>
                 </div>
               </div>
 
               <div className="finance-info income-info">
-              <span>Доходы</span>
-                <strong>0 ₽</strong>
+                <span>Доходы</span>
+                <strong>
+                  {income.toLocaleString("ru-RU")} ₽
+                </strong>
               </div>
-
             </div>
           </section>
 
           {/* ДОХОДЫ И РАСХОДЫ */}
 
           <section className="operations">
-
             <div className="operation-card income-card">
               <div>
                 <span>Доходы</span>
-                <h3>0 ₽</h3>
+                <h3>
+                  {income.toLocaleString("ru-RU")} ₽
+                </h3>
               </div>
 
               <button
                 className="add-button income-plus"
-                onClick={() => {
-                  const amount = prompt("Введите сумму дохода:");
-                  if (amount && !isNaN(amount) && Number(amount) > 0) {
-                    alert("Доход добавлен: " + amount + " ₽");
-                  }
-                }}
+                onClick={() => addOperation("income")}
               >
                 +
               </button>
@@ -183,32 +246,26 @@ export default function App() {
             <div className="operation-card expense-card">
               <div>
                 <span>Расходы</span>
-                <h3>0 ₽</h3>
+                <h3>
+                  {expenses.toLocaleString("ru-RU")} ₽
+                </h3>
               </div>
 
               <button
                 className="add-button expense-plus"
-                onClick={() => {
-                  const amount = prompt("Введите сумму расхода:");
-                  if (amount && !isNaN(amount) && Number(amount) > 0) {
-                    alert("Расход добавлен: " + amount + " ₽");
-                  }
-                }}
+                onClick={() => addOperation("expense")}
               >
                 +
               </button>
             </div>
-
           </section>
 
           {/* КОПИЛКА */}
 
           <section className="piggy-card">
-
             <h2 className="piggy-title">Моя копилка</h2>
 
             <div className="piggy-content">
-
               <img
                 src={piggyBank}
                 alt="Копилка"
@@ -216,16 +273,16 @@ export default function App() {
               />
 
               <div className="piggy-info">
-
                 <div className="piggy-goal">
                   <span>Цель</span>
-                  <strong>Моя цель</strong>
+                  <strong>{goalName}</strong>
                 </div>
 
                 <div className="piggy-saved">
                   <span>Сколько накоплено</span>
                   <strong>
-                    {savedAmount} ₽ из {targetAmount} ₽
+                    {savedAmount.toLocaleString("ru-RU")} ₽ из{" "}
+                    {goal.toLocaleString("ru-RU")} ₽
                   </strong>
                 </div>
 
@@ -233,86 +290,108 @@ export default function App() {
                   <div
                     className="piggy-progress-fill"
                     style={{ width: `${progress}%` }}
-                  ></div>
+                    />
+                  </div>
+  
+                  <div className="piggy-remaining">
+                    <span>Осталось накопить</span>
+                    <strong>
+                      {remaining.toLocaleString("ru-RU")} ₽
+                    </strong>
+                  </div>
                 </div>
-
-                <div className="piggy-remaining">
-                  <span>Осталось накопить</span>
-                  <strong>{remaining} ₽</strong>
-                </div>
-
               </div>
-
-            </div>
-
-            <button
-              className="piggy-button"
-              onClick={() => {
-                const amount = prompt("На сколько пополнить копилку?");
-
-                if (amount && !isNaN(amount) && Number(amount) > 0) {
-                  setSavedAmount((prev) => prev + Number(amount));
-                }
-              }}
-            >
-              Пополнить копилку
-            </button>
-
-          </section>
-
-          {/* НИЖНЯЯ НАВИГАЦИЯ */}
-
-          <nav className="bottom-nav">
-
-            <button
-              className={`nav-item ${activePage === "home" ? "active" : ""}`}
-              onClick={() => setActivePage("home")}
-            >
-              <svg viewBox="0 0 24 24">
-                <path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z" />
-              </svg>
-              <span>Главная</span>
-            </button>
-
-            <button
-              className={`nav-item ${activePage === "savings" ? "active" : ""}`}
-              onClick={() => setActivePage("savings")}
-            >
-              <svg viewBox="0 0 24 24">
-                <rect x="3" y="6" width="18" height="14" rx="3" />
-                <path d="M3 9h18" />
-                <path d="M16 13h5" />
-                <circle cx="16" cy="13" r="1" />
-                <path d="M7 6V4h11v2" />
-              </svg>
-              <span>Копилка</span>
-            </button>
-
-            <button className="nav-item">
-              <svg viewBox="0 0 24 24">
-                <path d="M12 3l3 3-3 3-3-3z" />
-                <path d="M12 9v3" />
-                <path d="M12 12l-4 4 4 4 4-4-4-4z" />
-                <path d="M5 21h14" />
-              </svg>
-              <span>Путь Фина</span>
-            </button>
-
-            <button
-              className={`nav-item ${activePage === "profile" ? "active" : ""}`}
-              onClick={() => setActivePage("profile")}
-            >
-              <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
-              </svg>
-              <span>Профиль</span>
-            </button>
-
-          </nav>
-
-        </>
-      )}
-    </div>
-  );
-}
+  
+              <button
+                className="piggy-button"
+                onClick={() => {
+                  const input = prompt(
+                    "На сколько пополнить копилку?"
+                  );
+  
+                  if (input === null || input.trim() === "") return;
+  
+                  const amount = Number(input.replace(",", "."));
+  
+                  if (!Number.isFinite(amount) || amount <= 0) {
+                    alert("Введите корректную сумму больше нуля.");
+                    return;
+                  }
+  
+                  const now = new Date();
+  
+                  const operation = {
+                    id: Date.now(),
+                    amount,
+                    date: now.toLocaleDateString("ru-RU"),
+                    time: now.toLocaleTimeString("ru-RU", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    }),
+                  };
+  
+                  setSavedAmount((prev) => prev + amount);
+                  setSavingsHistory((prev) => [operation, ...prev]);
+                }}
+              >
+                Пополнить копилку
+              </button>
+            </section>
+  
+            {/* НИЖНЯЯ НАВИГАЦИЯ */}
+  
+            <nav className="bottom-nav">
+              <button
+                className={`nav-item ${
+                  activePage === "home" ? "active" : ""
+                }`}
+                onClick={() => setActivePage("home")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z" />
+                </svg>
+                <span>Главная</span>
+              </button>
+  
+              <button
+                className="nav-item"
+                onClick={() => setActivePage("savings")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="6" width="18" height="14" rx="3" />
+                  <path d="M3 9h18" />
+                  <path d="M16 13h5" />
+                  <circle cx="16" cy="13" r="1" />
+                  <path d="M7 6V4h11v2" />
+                </svg>
+                <span>Копилка</span>
+              </button>
+  
+              <button className="nav-item">
+                <svg viewBox="0 0 24 24">
+                  <path d="M12 3l3 3-3 3-3-3z" />
+                  <path d="M12 9v3" />
+                  <path d="M12 12l-4 4 4 4 4-4-4-4z" />
+                  <path d="M5 21h14" />
+                </svg>
+                <span>Путь Фина</span>
+              </button>
+  
+              <button
+                className={`nav-item ${
+                  activePage === "profile" ? "active" : ""
+                }`}
+                onClick={() => setActivePage("profile")}
+              >
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" />
+                </svg>
+                <span>Профиль</span>
+              </button>
+            </nav>
+          </>
+        )}
+      </div>
+    );
+  }
