@@ -388,3 +388,112 @@ body {
 .nav-item:active {
   transform: scale(0.93);
 }
+/* АВТОРИЗАЦИЯ — ФИНТИН */
+
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 30px 22px;
+  background:
+    radial-gradient(circle at 50% 20%, #1c4035 0%, transparent 45%),
+    #101c19;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.auth-page h1 {
+  font-size: 38px;
+  font-weight: 900;
+  margin-bottom: 10px;
+  letter-spacing: -1px;
+}
+
+.auth-page h1::first-letter {
+  color: #55e5b1;
+}
+
+.auth-page > p {
+  color: #a9c2b7;
+  font-size: 15px;
+  margin-bottom: 30px;
+}
+
+.auth-page form {
+  width: 100%;
+  max-width: 360px;
+  padding: 25px 20px;
+  background: #142722;
+  border: 1px solid #55e5b155;
+  border-radius: 24px;
+  box-shadow: 0 12px 40px #00000040;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.auth-page input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #36564a;
+  border-radius: 13px;
+  background: #101c19;
+  color: white;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.auth-page input:focus {
+  border-color: #55e5b1;
+  box-shadow: 0 0 0 3px #55e5b122;
+}
+
+.auth-page input::placeholder {
+  color: #91a69c;
+}
+
+.auth-page form button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 13px;
+  background: #55e5b1;
+  color: #10251e;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.auth-page form button:hover {
+  background: #75f2c2;
+  transform: translateY(-2px);
+}
+
+.auth-page form button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.auth-page > button {
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  color: #55e5b1;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.auth-page form + p {
+  margin-top: 15px;
+  margin-bottom: 0;
+  color: #55e5b1;
+  text-align: center;
+  font-size: 13px;
+  max-width: 340px;
+}
