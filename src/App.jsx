@@ -415,12 +415,30 @@ const incomePercent =
               </button>
   
               <button className="nav-item">
-                <svg viewBox="0 0 24 24">
-                  <path d="M12 3l3 3-3 3-3-3z" />
-                  <path d="M12 9v3" />
-                  <path d="M12 12l-4 4 4 4 4-4-4-4z" />
-                  <path d="M5 21h14" />
-                </svg>
+              <svg viewBox="0 0 24 24" fill="none">
+  <path
+    d="M12 7.5C10.2 5.8 7.2 5 3.5 5.5V18
+       C7 17.5 10 18.3 12 20
+       C14 18.3 17 17.5 20.5 18V5.5
+       C16.8 5 13.8 5.8 12 7.5Z"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  />
+  <path
+    d="M12 7.5V20"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+  />
+  <path
+    d="M6.5 9.5C8 9.5 9.3 9.8 10.2 10.4M6.5 12.5C8 12.5 9.3 12.8 10.2 13.4M17.5 9.5C16 9.5 14.7 9.8 13.8 10.4M17.5 12.5C16 12.5 14.7 12.8 13.8 13.4"
+    stroke="currentColor"
+    strokeWidth="1.3"
+    strokeLinecap="round"
+  />
+</svg>
                 <span>Курсы</span>
               </button>
   
