@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Operations from "./Operations";
 import piggyBank from "./assets/piggy-bank.png";
 import "./App.css";
 import Savings from "./Savings";
@@ -59,6 +60,12 @@ export default function App() {
 
   // Общие расчёты
   const balance = income - expenses;
+  const totalOperations = income + expenses;
+
+const incomePercent =
+  totalOperations > 0
+    ? (income / totalOperations) * 100
+    : 0;
 
   const remaining = Math.max(goal - savedAmount, 0);
 
@@ -129,7 +136,13 @@ export default function App() {
 
   return (
     <div className="app">
-      {activePage === "savings" ? (
+{activePage === "operations" ? (
+  <Operations
+    onNavigate={setActivePage}
+    incomeHistory={incomeHistory}
+    expenseHistory={expenseHistory}
+  />
+) : activePage === "savings" ? (
         <Savings
           onNavigate={setActivePage}
           saved={savedAmount}
@@ -196,7 +209,30 @@ export default function App() {
           {/* ТВОИ ФИНАНСЫ */}
 
           <section className="finance-card">
-            <h2 className="finance-title">Твои финансы</h2>
+          <div
+  style={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: "15px",
+  }}
+>
+  <h2 className="finance-title">Твои финансы</h2>
+
+  <button
+    onClick={() => setActivePage("operations")}
+    style={{
+      background: "none",
+      border: "none",
+      color: "#55e5b1",
+      fontSize: "13px",
+      cursor: "pointer",
+      transform: "translateY(-6px)"
+    }}
+  >
+    Все операции →
+  </button>
+</div>
 
             <div className="finance-content">
               <div className="finance-info expense-info">
@@ -206,14 +242,25 @@ export default function App() {
                 </strong>
               </div>
 
-              <div className="finance-chart">
-                <div className="chart-center">
-                  <span>Баланс</span>
-                  <strong>
-                    {balance.toLocaleString("ru-RU")} ₽
-                  </strong>
-                </div>
-              </div>
+              <div
+  className="finance-chart"
+  style={{
+    background:
+      totalOperations === 0
+        ? "#34413e"
+        : `conic-gradient(
+            #55e5a5 0% ${incomePercent}%,
+            #ff626b ${incomePercent}% 100%
+          )`,
+  }}
+>
+  <div className="chart-center">
+    <span>Баланс</span>
+    <strong>
+      {balance.toLocaleString("ru-RU")} ₽
+    </strong>
+  </div>
+</div>
 
               <div className="finance-info income-info">
                 <span>Доходы</span>
@@ -374,7 +421,7 @@ export default function App() {
                   <path d="M12 12l-4 4 4 4 4-4-4-4z" />
                   <path d="M5 21h14" />
                 </svg>
-                <span>Путь Фина</span>
+                <span>Курсы</span>
               </button>
   
               <button

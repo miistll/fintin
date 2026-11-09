@@ -172,7 +172,7 @@ export default function Savings({
       <path d="M12 12l-4 4 4 4 4-4-4-4z" />
       <path d="M5 21h14" />
     </svg>
-    <span>Путь Фина</span>
+    <span>Курсы</span>
   </button>
 
   <button
