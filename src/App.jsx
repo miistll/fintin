@@ -41,6 +41,73 @@ export default function App() {
     };
   }, []);
 
+  // Загрузка данных пользователя из Supabase
+useEffect(() => {
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    setLoadedUserId(null);
+    return;
+  }
+
+  let cancelled = false;
+
+  setLoadedUserId(null);
+
+  async function loadData() {
+    const { data, error } = await supabase
+      .from("user_data")
+      .select("data")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (cancelled) return;
+
+    if (error) {
+      console.error("Ошибка загрузки данных:", error);
+      return;
+    }
+
+    const savedData = data?.data;
+
+    if (savedData) {
+      setSavedAmount(savedData.savedAmount ?? 0);
+      setGoal(savedData.goal ?? 0);
+      setGoalName(savedData.goalName ?? "Моя мечта");
+      setSavingsHistory(
+        Array.isArray(savedData.savingsHistory)
+          ? savedData.savingsHistory
+          : []
+      );
+
+      setIncome(savedData.income ?? 0);
+      setExpenses(savedData.expenses ?? 0);
+
+      setIncomeHistory(
+        Array.isArray(savedData.incomeHistory)
+          ? savedData.incomeHistory
+          : []
+      );
+
+      setExpenseHistory(
+        Array.isArray(savedData.expenseHistory)
+          ? savedData.expenseHistory
+          : []
+      );
+    }
+
+    setLoadedUserId(userId);
+  }
+
+  loadData();
+
+  return () => {
+    cancelled = true;
+  };
+}, [session?.user?.id]);
+
+
+
   // Календарь
   const [selectedDate, setSelectedDate] = useState(
     today.toDateString()
@@ -57,6 +124,7 @@ export default function App() {
   const [expenses, setExpenses] = useState(0);
   const [incomeHistory, setIncomeHistory] = useState([]);
   const [expenseHistory, setExpenseHistory] = useState([]);
+  const [loadedUserId, setLoadedUserId] = useState(null);
 
   // Общие расчёты
   const balance = income - expenses;
@@ -73,6 +141,72 @@ const incomePercent =
     goal > 0
       ? Math.min(100, (savedAmount / goal) * 100)
       : 0;
+
+      // Загрузка данных пользователя из Supabase
+useEffect(() => {
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    setLoadedUserId(null);
+    return;
+  }
+
+  let cancelled = false;
+
+  setLoadedUserId(null);
+
+  async function loadData() {
+    const { data, error } = await supabase
+      .from("user_data")
+      .select("data")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (cancelled) return;
+
+    if (error) {
+      console.error("Ошибка загрузки данных:", error);
+      return;
+    }
+
+    const savedData = data?.data;
+
+    if (savedData) {
+      setSavedAmount(savedData.savedAmount ?? 0);
+      setGoal(savedData.goal ?? 0);
+      setGoalName(savedData.goalName ?? "Моя мечта");
+      setSavingsHistory(
+        Array.isArray(savedData.savingsHistory)
+          ? savedData.savingsHistory
+          : []
+      );
+
+      setIncome(savedData.income ?? 0);
+      setExpenses(savedData.expenses ?? 0);
+
+      setIncomeHistory(
+        Array.isArray(savedData.incomeHistory)
+          ? savedData.incomeHistory
+          : []
+      );
+
+      setExpenseHistory(
+        Array.isArray(savedData.expenseHistory)
+          ? savedData.expenseHistory
+          : []
+      );
+    }
+
+    setLoadedUserId(userId);
+  }
+
+  loadData();
+
+  return () => {
+    cancelled = true;
+  };
+}, [session?.user?.id]);
+
 
   // Добавление дохода или расхода
   function addOperation(type) {
