@@ -107,18 +107,13 @@ export default function Profile({
         <button
           className="nav-item"
           onClick={() => onNavigate("savings")}
-        >
-          <svg viewBox="0 0 24 24">
-            <rect x="3" y="6" width="18" height="14" rx="3" />
-            <path d="M3 9h18M16 13h5" />
-            <circle cx="16" cy="13" r="1" />
-          </svg>
+        >              <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3" /><path d="M3 9h18" /><path d="M16 13h5" /><circle cx="16" cy="13" r="1" /><path d="M7 6V4h11v2" /></svg>
           <span>Копилка</span>
         </button>
 
         <button
           className="nav-item"
-          onClick={() => onNavigate("path")}
+          onClick={() => onNavigate("courses")}
         >
 <svg viewBox="0 0 24 24" fill="none">
   <path

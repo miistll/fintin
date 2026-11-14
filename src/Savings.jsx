@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Savings.css";
 import piggyBank from "./assets/piggy-bank.png";
 
@@ -20,7 +20,17 @@ export default function Savings({
   history,
   setHistory,
 }) {
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [dismissedForGoal, setDismissedForGoal] = useState(null);
+
   const progress = goal > 0 ? Math.min(100, (saved / goal) * 100) : 0;
+  const goalReached = goal > 0 && saved >= goal;
+
+  useEffect(() => {
+    if (goalReached && dismissedForGoal !== goal) {
+      setShowCelebration(true);
+    }
+  }, [goalReached, dismissedForGoal, goal]);
 
   function addMoney() {
     const input = prompt("Сколько рублей добавить?");
@@ -61,6 +71,35 @@ export default function Savings({
     }
   }
 
+  function handleStartNewGoal() {
+    setShowCelebration(false);
+    setDismissedForGoal(null);
+    setSaved(0);
+    setHistory([]);
+    setGoalName("Новая мечта");
+    setGoal(0);
+
+    setTimeout(() => {
+      const name = prompt("Как назовём новую мечту?", "Моя мечта");
+      if (name !== null && name.trim() !== "") setGoalName(name.trim());
+
+      const input = prompt("Сколько нужно накопить?");
+      if (input === null || input.trim() === "") return;
+
+      const amount = Number(input.replace(",", "."));
+      if (Number.isFinite(amount) && amount > 0) {
+        setGoal(amount);
+      } else {
+        alert("Введите корректную сумму больше нуля.");
+      }
+    }, 100);
+  }
+
+  function handleDismissCelebration() {
+    setShowCelebration(false);
+    setDismissedForGoal(goal);
+  }
+
   return (
     <div className="app">
       <header className="header">
@@ -86,8 +125,17 @@ export default function Savings({
       </section>
 
       <section className="savings-info">
-        <p>Осталось накопить</p>
-        <h2>{Math.max(goal - saved, 0).toLocaleString("ru-RU")} ₽</h2>
+        {goalReached ? (
+          <>
+            <p>Цель достигнута 🎉</p>
+            <h2>Ты молодец!</h2>
+          </>
+        ) : (
+          <>
+            <p>Осталось накопить</p>
+            <h2>{Math.max(goal - saved, 0).toLocaleString("ru-RU")} ₽</h2>
+          </>
+        )}
       </section>
 
       <section className="savings-history">
@@ -107,6 +155,27 @@ export default function Savings({
         )}
       </section>
 
+      {showCelebration && (
+        <div className="celebration-overlay" onClick={handleDismissCelebration}>
+          <div className="celebration-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="celebration-emoji">🎉</div>
+            <h2>Ты молодец!</h2>
+            <p>
+              Ты накопил {saved.toLocaleString("ru-RU")} ₽ на «{goalName}».
+              Хочешь начать копить на новую мечту?
+            </p>
+            <div className="celebration-actions">
+              <button className="celebration-yes" onClick={handleStartNewGoal}>
+                Да, новая мечта
+              </button>
+              <button className="celebration-no" onClick={handleDismissCelebration}>
+                Пока нет
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <nav className="bottom-nav">
         <button className="nav-item" onClick={() => onNavigate("home")}>
           <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z" /></svg>
@@ -116,7 +185,7 @@ export default function Savings({
           <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3" /><path d="M3 9h18" /><path d="M16 13h5" /><circle cx="16" cy="13" r="1" /><path d="M7 6V4h11v2" /></svg>
           <span>Копилка</span>
         </button>
-        <button className="nav-item" onClick={() => onNavigate("path")}>
+        <button className="nav-item" onClick={() => onNavigate("courses")}>
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M12 7.5C10.2 5.8 7.2 5 3.5 5.5V18 C7 17.5 10 18.3 12 20 C14 18.3 17 17.5 20.5 18V5.5 C16.8 5 13.8 5.8 12 7.5Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
             <path d="M12 7.5V20" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />

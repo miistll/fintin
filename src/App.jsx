@@ -6,6 +6,7 @@ import Savings from "./Savings";
 import Profile from "./Profile";
 import Auth from "./Auth";
 import { supabase } from "./supabaseClient";
+import Courses from "./Courses";
 
 function getDateKey(date) {
   const year = date.getFullYear();
@@ -267,6 +268,8 @@ export default function App() {
           expenseHistory={expenseHistory}
           savingsHistory={savingsHistory}
         />
+        ) : activePage === "courses" ? (
+          <Courses onNavigate={setActivePage} />
       ) : (
         <>
           <header className="header">
@@ -405,7 +408,7 @@ export default function App() {
               <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3" /><path d="M3 9h18" /><path d="M16 13h5" /><circle cx="16" cy="13" r="1" /><path d="M7 6V4h11v2" /></svg>
               <span>Копилка</span>
             </button>
-            <button className="nav-item">
+            <button className="nav-item" onClick={() => setActivePage("courses")}>
               <svg viewBox="0 0 24 24" fill="none">
                 <path d="M12 7.5C10.2 5.8 7.2 5 3.5 5.5V18 C7 17.5 10 18.3 12 20 C14 18.3 17 17.5 20.5 18V5.5 C16.8 5 13.8 5.8 12 7.5Z" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M12 7.5V20" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />

@@ -1,3 +1,5 @@
+/* ОСНОВА */
+
 * {
   margin: 0;
   padding: 0;
@@ -15,8 +17,7 @@ body {
   min-height: 100vh;
   max-width: 430px;
   margin: 0 auto;
-  padding: 22px 16px;
-  background: #101c19;
+  padding: 22px 16px 110px;
 }
 
 /* ШАПКА */
@@ -28,7 +29,7 @@ body {
 .logo {
   font-size: 30px;
   font-weight: 900;
-  color: #ffffff;
+  color: white;
   margin-bottom: 18px;
 }
 
@@ -146,40 +147,40 @@ body {
 }
 
 .finance-chart {
-  width: 145px;
-  height: 145px;
+  width: 150px;
+  height: 150px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: conic-gradient(
-    #55e5a5 0deg 180deg,
-    #ff626b 180deg 360deg
-  );
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  box-shadow: 0 0 12px rgba(85, 229, 177, 0.35),
+    0 0 25px rgba(85, 229, 177, 0.2);
+  transition: background 0.4s ease;
 }
 
 .chart-center {
-  width: 82px;
-  height: 82px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
-  background: #142722;
+  background: #101c19;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  box-shadow: inset 0 0 12px rgba(85, 229, 177, 0.08);
 }
 
 .chart-center span {
-  color: white;
-  font-size: 12px;
+  color: #aab8b1;
+  font-size: 13px;
 }
 
 .chart-center strong {
-  color: #55e5b1;
+  color: white;
   font-size: 17px;
+  margin-top: 5px;
 }
 
 /* ДОХОДЫ И РАСХОДЫ */
@@ -329,11 +330,8 @@ body {
   font-weight: 800;
   cursor: pointer;
 }
-/* НИЖНЯЯ НАВИГАЦИЯ */
 
-.app {
-  padding-bottom: 110px;
-}
+/* НИЖНЯЯ НАВИГАЦИЯ */
 
 .bottom-nav {
   position: fixed;
@@ -388,14 +386,14 @@ body {
 .nav-item:active {
   transform: scale(0.93);
 }
-/* АВТОРИЗАЦИЯ — ФИНТИН */
+
+/* АВТОРИЗАЦИЯ */
 
 .auth-page {
   min-height: 100vh;
   width: 100%;
   padding: 30px 22px;
-  background:
-    radial-gradient(circle at 50% 20%, #1c4035 0%, transparent 45%),
+  background: radial-gradient(circle at 50% 20%, #1c4035 0%, transparent 45%),
     #101c19;
   display: flex;
   flex-direction: column;
@@ -496,46 +494,4 @@ body {
   text-align: center;
   font-size: 13px;
   max-width: 340px;
-}
-
-.finance-chart {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-
-  box-shadow:
-    0 0 12px rgba(85, 229, 177, 0.35),
-    0 0 25px rgba(85, 229, 177, 0.2);
-
-  transition: background 0.4s ease;
-}
-
-.chart-center {
-  width: 112px;
-  height: 112px;
-  border-radius: 50%;
-  background: #101c19;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  box-shadow:
-    inset 0 0 12px rgba(85, 229, 177, 0.08);
-}
-
-.chart-center span {
-  color: #aab8b1;
-  font-size: 13px;
-}
-
-.chart-center strong {
-  color: white;
-  font-size: 17px;
-  margin-top: 5px;
 }

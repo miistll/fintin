@@ -5,6 +5,7 @@
   padding: 2px 25px;
   text-align: center;
   margin: 20px 17px 15px;
+  padding-bottom: 24px; 
 }
 
 .savings-card img {
@@ -21,6 +22,7 @@
 .savings-card h2 {
   margin: 7px 0 12px;
   color: white;
+  
 }
 
 .savings-amount {
@@ -122,4 +124,90 @@
 
 .savings-page {
   padding-bottom: 95px;
+}
+
+/* Оверлей */
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Модалка */
+.celebration-modal {
+  background: #24322e;
+  border-radius: 20px;
+  padding: 28px 22px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  animation: popIn 0.25s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.celebration-emoji {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.celebration-modal h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+  color: #55e5b1;
+}
+
+.celebration-modal p {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #c8d6d0;
+  margin-bottom: 20px;
+}
+
+.celebration-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.celebration-yes,
+.celebration-no {
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.celebration-yes {
+  background: #55e5b1;
+  color: #10221c;
+}
+
+.celebration-no {
+  background: #2e403a;
+  color: #c8d6d0;
+}
+
+.celebration-yes:hover,
+.celebration-no:hover {
+  opacity: 0.85;
 }
