@@ -216,3 +216,124 @@
   margin-top: 40px;
   font-weight: 500;
 }
+
+/* ===== Красивые блоки внутри статьи ===== */
+
+/* Совет / лайфхак — зелёная рамка */
+.article-content .tip-box {
+  background: rgba(85, 229, 177, 0.08);
+  border: 1px solid rgba(85, 229, 177, 0.4);
+  border-left: 4px solid #55e5b1;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.article-content .tip-box strong {
+  color: #55e5b1;
+}
+
+/* Предупреждение — красная рамка */
+.article-content .warning-box {
+  background: rgba(255, 98, 107, 0.08);
+  border: 1px solid rgba(255, 98, 107, 0.4);
+  border-left: 4px solid #ff626b;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+}
+
+.article-content .warning-box strong {
+  color: #ff8a90;
+}
+
+/* Пример — нейтральная рамка */
+.article-content .example-box {
+  background: #24322e;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  border-left: 4px solid #9fb3ac;
+}
+
+/* Красивые нумерованные пункты в кружочках */
+.article-content ol.steps {
+  list-style: none;
+  counter-reset: step;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.article-content ol.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding-left: 44px;
+  margin-bottom: 14px;
+  line-height: 1.6;
+}
+
+.article-content ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  background: #55e5b1;
+  color: #10221c;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Красивые таблицы */
+.article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 13px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.article-content thead {
+  background: #2e403a;
+}
+
+.article-content th {
+  padding: 10px 12px;
+  text-align: left;
+  color: #55e5b1;
+  font-weight: 600;
+  border-bottom: 1px solid #34413e;
+}
+
+.article-content td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #2a3633;
+  color: #e3ece8;
+}
+
+.article-content tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.article-content tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Разделитель */
+.article-content hr {
+  border: none;
+  border-top: 1px solid #34413e;
+  margin: 24px 0;
+}
+
+/* Заголовки шагов */
+.article-content h2 {
+  border-bottom: 1px solid #2e403a;
+  padding-bottom: 8px;
+}
