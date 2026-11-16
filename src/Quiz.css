@@ -1,0 +1,353 @@
+.quiz-page {
+  padding: 20px;
+  padding-bottom: 90px;
+  min-height: 100vh;
+  background: #1a2320;
+  color: #fff;
+  box-sizing: border-box;
+}
+
+.quiz-progress-bar {
+  height: 6px;
+  background: #24322e;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.quiz-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #55e5b1, #3cc98f);
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.quiz-back {
+  background: none;
+  border: none;
+  color: #55e5b1;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.quiz-progress {
+  font-size: 13px;
+  color: #9fb3ac;
+}
+
+.quiz-question {
+  font-size: 18px;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.quiz-hint {
+  font-size: 12px;
+  color: #9fb3ac;
+  margin-bottom: 14px;
+  font-style: italic;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #24322e;
+  border: 1px solid #34413e;
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #fff;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.1s;
+  animation: fadeUp 0.25s ease;
+}
+
+.quiz-option:hover:not(:disabled) {
+  background: #2e403a;
+}
+
+.quiz-option:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.quiz-option.selected {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.1);
+}
+
+.quiz-option.correct {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.2);
+}
+
+.quiz-option.wrong {
+  border-color: #ff626b;
+  background: rgba(255, 98, 107, 0.15);
+}
+
+.quiz-option:disabled {
+  cursor: default;
+}
+
+.quiz-option-marker {
+  font-size: 16px;
+  color: #55e5b1;
+  flex-shrink: 0;
+  width: 20px;
+  text-align: center;
+}
+
+.quiz-option.correct .quiz-option-marker {
+  color: #55e5b1;
+}
+
+.quiz-option.wrong .quiz-option-marker {
+  color: #ff626b;
+}
+
+.quiz-option-text {
+  flex: 1;
+}
+
+.quiz-feedback {
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 14px;
+  margin-bottom: 16px;
+  animation: fadeUp 0.3s ease;
+}
+
+.quiz-feedback.ok {
+  background: rgba(85, 229, 177, 0.1);
+  color: #55e5b1;
+  border: 1px solid rgba(85, 229, 177, 0.4);
+}
+
+.quiz-feedback.bad {
+  background: rgba(255, 98, 107, 0.1);
+  color: #ff8a90;
+  border: 1px solid rgba(255, 98, 107, 0.4);
+}
+
+.quiz-action {
+  width: 100%;
+  background: #55e5b1;
+  color: #10221c;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.quiz-action:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.quiz-action:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.quiz-result {
+  text-align: center;
+  padding-top: 40px;
+  animation: fadeUp 0.4s ease;
+}
+
+.quiz-result-emoji {
+  font-size: 64px;
+  margin-bottom: 12px;
+}
+
+.quiz-result h2 {
+  font-size: 22px;
+  color: #55e5b1;
+  margin-bottom: 12px;
+}
+
+.quiz-result p {
+  font-size: 15px;
+  color: #c8d6d0;
+  margin-bottom: 8px;
+}
+
+.quiz-percent {
+  font-size: 32px !important;
+  font-weight: 700;
+  color: #55e5b1 !important;
+  margin: 16px 0 24px !important;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MATCH */
+.quiz-match {
+  display: flex;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.match-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.match-item {
+  background: #24322e;
+  border: 1px solid #34413e;
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 50px;
+}
+
+.match-item:hover:not(:disabled) {
+  background: #2e403a;
+}
+
+.match-item.active {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.15);
+}
+
+.match-item.paired {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.2);
+}
+
+.match-item.correct {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.25);
+}
+
+.match-item.wrong {
+  border-color: #ff626b;
+  background: rgba(255, 98, 107, 0.2);
+}
+
+/* BUCKETS */
+.quiz-buckets {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.bucket-item {
+  background: #24322e;
+  border: 1px solid #34413e;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.bucket-item.correct {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.12);
+}
+
+.bucket-item.wrong {
+  border-color: #ff626b;
+  background: rgba(255, 98, 107, 0.12);
+}
+
+.bucket-text {
+  font-size: 13px;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.bucket-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.bucket-btn {
+  flex: 1;
+  background: #1a2320;
+  border: 1px solid #34413e;
+  border-radius: 8px;
+  padding: 8px;
+  color: #c8d6d0;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.bucket-btn:hover:not(:disabled) {
+  border-color: #55e5b1;
+}
+
+.bucket-btn.selected {
+  background: #55e5b1;
+  color: #10221c;
+  border-color: #55e5b1;
+  font-weight: 600;
+}
+
+.match-item.pair-color-0 {
+  border-color: #55e5b1;
+  background: rgba(85, 229, 177, 0.18);
+  color: #55e5b1;
+}
+
+.match-item.pair-color-1 {
+  border-color: #6bb8ff;
+  background: rgba(107, 184, 255, 0.18);
+  color: #6bb8ff;
+}
+
+.match-item.pair-color-2 {
+  border-color: #ffd166;
+  background: rgba(255, 209, 102, 0.18);
+  color: #ffd166;
+}
+
+.match-item.pair-color-3 {
+  border-color: #c792ea;
+  background: rgba(199, 146, 234, 0.18);
+  color: #c792ea;
+}
+
+.match-item.pair-color-4 {
+  border-color: #ff9f7f;
+  background: rgba(255, 159, 127, 0.18);
+  color: #ff9f7f;
+}
+
+/* При проверке правильная пара остаётся цветной, но с зелёной обводкой */
+.match-item.correct {
+  box-shadow: 0 0 0 2px #55e5b1 inset;
+}
+
+.match-item.wrong {
+  box-shadow: 0 0 0 2px #ff626b inset;
+}

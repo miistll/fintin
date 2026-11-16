@@ -7,6 +7,7 @@ import Profile from "./Profile";
 import Auth from "./Auth";
 import { supabase } from "./supabaseClient";
 import Courses from "./Courses";
+import finOwl from "./assets/fin.png";
 
 function getDateKey(date) {
   const year = date.getFullYear();
@@ -35,10 +36,11 @@ export default function App() {
   const [incomeHistory, setIncomeHistory] = useState([]);
   const [expenseHistory, setExpenseHistory] = useState([]);
 
-  // Новые поля для профиля
   const [displayName, setDisplayName] = useState("");
   const [readArticles, setReadArticles] = useState([]);
   const [achievements, setAchievements] = useState([]);
+  const [hasSeenIntro, setHasSeenIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
 
   const [loadedUserId, setLoadedUserId] = useState(null);
 
@@ -74,6 +76,8 @@ export default function App() {
       setDisplayName(d.displayName || "");
       setReadArticles(Array.isArray(d.readArticles) ? d.readArticles : []);
       setAchievements(Array.isArray(d.achievements) ? d.achievements : []);
+      setHasSeenIntro(d.hasSeenIntro || false);
+      if (!d.hasSeenIntro) setShowIntro(true);
       setLoadedUserId(userId);
     }
     loadData();
@@ -85,7 +89,7 @@ export default function App() {
     if (!userId || loadedUserId !== userId) return;
     const dataToSave = {
       savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory,
-      displayName, readArticles, achievements,
+      displayName, readArticles, achievements, hasSeenIntro,
     };
     const timeoutId = setTimeout(async () => {
       const { error } = await supabase.from("user_data").upsert(
@@ -95,7 +99,7 @@ export default function App() {
       if (error) console.error("Ошибка сохранения:", error);
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [session?.user?.id, loadedUserId, savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory, displayName, readArticles, achievements]);
+  }, [session?.user?.id, loadedUserId, savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory, displayName, readArticles, achievements, hasSeenIntro]);
 
   const selectedDateObject = new Date(selectedDate);
   const selectedDateKey = getDateKey(selectedDateObject);
@@ -250,6 +254,19 @@ export default function App() {
             <button className="nav-item" onClick={() => setActivePage("profile")}><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" /></svg><span>Профиль</span></button>
           </nav>
         </>
+      )}
+
+      {showIntro && (
+        <div className="intro-overlay">
+          <div className="intro-modal">
+            <img src={finOwl} alt="Фин" className="intro-owl" />
+            <h2>Привет! Я Фин 🦉</h2>
+            <p>Помогу тебе копить, вести бюджет и разбираться в финансах. Начнём?</p>
+            <button className="intro-btn" onClick={() => { setShowIntro(false); setHasSeenIntro(true); }}>
+              Поехали!
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

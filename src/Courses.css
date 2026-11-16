@@ -217,9 +217,145 @@
   font-weight: 500;
 }
 
-/* ===== Красивые блоки внутри статьи ===== */
+.go-quiz-btn {
+  width: 100%;
+  margin-top: 24px;
+  background: #55e5b1;
+  color: #10221c;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
 
-/* Совет / лайфхак — зелёная рамка */
+.path-zigzag {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px 0 20px;
+}
+
+.path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.path-row.right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.path-node {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.path-node:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.path-node.done {
+  background: #55e5b1;
+  color: #10221c;
+}
+
+.path-node.current {
+  background: #ffd166;
+  color: #10221c;
+  animation: pathPulse 1.6s infinite;
+}
+
+.path-node.locked {
+  background: #34413e;
+  color: #6b7c76;
+  cursor: not-allowed;
+}
+
+.path-label {
+  font-size: 13px;
+  color: #c8d6d0;
+  flex: 1;
+  line-height: 1.3;
+}
+
+@keyframes pathPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.5); }
+  50% { box-shadow: 0 0 0 10px rgba(255, 209, 102, 0); }
+}
+
+.path-zigzag {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 10px 0 30px;
+}
+
+.path-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.path-row.right {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.path-node {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.path-node:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.path-node.done {
+  background: #55e5b1;
+  color: #10221c;
+}
+
+.path-node.current {
+  background: #ffd166;
+  color: #10221c;
+  animation: pathPulse 1.6s infinite;
+}
+
+.path-node.locked {
+  background: #34413e;
+  color: #6b7c76;
+  cursor: not-allowed;
+}
+
+.path-label {
+  font-size: 13px;
+  color: #c8d6d0;
+  flex: 1;
+  line-height: 1.3;
+}
+
+@keyframes pathPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 209, 102, 0.5); }
+  50% { box-shadow: 0 0 0 10px rgba(255, 209, 102, 0); }
+}
+
 .article-content .tip-box {
   background: rgba(85, 229, 177, 0.08);
   border: 1px solid rgba(85, 229, 177, 0.4);
@@ -229,11 +365,6 @@
   margin: 16px 0;
 }
 
-.article-content .tip-box strong {
-  color: #55e5b1;
-}
-
-/* Предупреждение — красная рамка */
 .article-content .warning-box {
   background: rgba(255, 98, 107, 0.08);
   border: 1px solid rgba(255, 98, 107, 0.4);
@@ -243,11 +374,6 @@
   margin: 16px 0;
 }
 
-.article-content .warning-box strong {
-  color: #ff8a90;
-}
-
-/* Пример — нейтральная рамка */
 .article-content .example-box {
   background: #24322e;
   border-radius: 12px;
@@ -256,7 +382,6 @@
   border-left: 4px solid #9fb3ac;
 }
 
-/* Красивые нумерованные пункты в кружочках */
 .article-content ol.steps {
   list-style: none;
   counter-reset: step;
@@ -289,7 +414,6 @@
   font-size: 14px;
 }
 
-/* Красивые таблицы */
 .article-content table {
   width: 100%;
   border-collapse: collapse;
@@ -325,15 +449,8 @@
   background: rgba(255, 255, 255, 0.02);
 }
 
-/* Разделитель */
 .article-content hr {
   border: none;
   border-top: 1px solid #34413e;
   margin: 24px 0;
-}
-
-/* Заголовки шагов */
-.article-content h2 {
-  border-bottom: 1px solid #2e403a;
-  padding-bottom: 8px;
 }

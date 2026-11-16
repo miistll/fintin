@@ -4,12 +4,15 @@ import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { supabase } from "./supabaseClient";
 import "./Courses.css";
+import Quiz from "./Quiz";
+
 
 export default function Courses({ onNavigate, readArticles = [], onArticleRead }) {
   const [tab, setTab] = useState("courses");
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedArticle, setSelectedArticle] = useState(null);
+  const [activeQuiz, setActiveQuiz] = useState(null);
 
   useEffect(() => {
     async function loadArticles() {
@@ -17,7 +20,6 @@ export default function Courses({ onNavigate, readArticles = [], onArticleRead }
         .from("articles")
         .select("*")
         .order("lesson_number", { ascending: true });
-
       if (error) console.error("Ошибка загрузки статей:", error);
       else setArticles(data || []);
       setLoading(false);
@@ -25,31 +27,43 @@ export default function Courses({ onNavigate, readArticles = [], onArticleRead }
     loadArticles();
   }, []);
 
-  function openArticle(article) {
-    setSelectedArticle(article);
-    if (onArticleRead) onArticleRead(article.id);
+  if (activeQuiz) {
+    return (
+      <Quiz
+        quiz={activeQuiz.quiz}
+        onBack={() => setActiveQuiz(null)}
+        onComplete={(correct, total) => {
+          if (onArticleRead && correct / total >= 0.7) onArticleRead(activeQuiz.id);
+          setActiveQuiz(null);
+        }}
+      />
+    );
   }
 
-  // Экран открытой статьи
+  function openArticle(article) {
+    setSelectedArticle(article);
+  }
+
   if (selectedArticle) {
     return (
       <div className="courses-page">
         <header className="header">
           <h1 className="logo">Фин<span>Тин</span></h1>
         </header>
-
         <button className="back-button" onClick={() => setSelectedArticle(null)}>
-          ← Назад к курсам
+          ← Назад
         </button>
-
         <h2 className="article-title">{selectedArticle.title}</h2>
-
         <div className="article-content">
           <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
             {selectedArticle.content}
           </ReactMarkdown>
         </div>
-
+        {selectedArticle.quiz && (
+          <button className="go-quiz-btn" onClick={() => setActiveQuiz(selectedArticle)}>
+            Перейти к тесту →
+          </button>
+        )}
         <nav className="bottom-nav">
           <button className="nav-item" onClick={() => onNavigate("home")}>
             <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z" /></svg>
@@ -76,15 +90,12 @@ export default function Courses({ onNavigate, readArticles = [], onArticleRead }
     );
   }
 
-  // Список статей + вкладки
   return (
     <div className="courses-page">
       <header className="header">
         <h1 className="logo">Фин<span>Тин</span></h1>
       </header>
-
       <h2 className="courses-heading">Курсы</h2>
-
       <div className="courses-tabs">
         <button className={tab === "courses" ? "course-tab active" : "course-tab"} onClick={() => setTab("courses")}>
           <span>📖</span> Курсы
@@ -122,7 +133,40 @@ export default function Courses({ onNavigate, readArticles = [], onArticleRead }
       )}
 
       {tab === "ai" && <h3 className="coming-soon">ИИ-агент скоро появится</h3>}
-      {tab === "path" && <h3 className="coming-soon">Путь Фина скоро появится</h3>}
+
+      {tab === "path" && (
+        <section className="path-zigzag">
+          {loading ? (
+            <p>Загрузка...</p>
+          ) : articles.length === 0 ? (
+            <p>Пока уроков нет</p>
+          ) : (
+            articles.map((article, index) => {
+              const isRead = readArticles.includes(article.id);
+              const firstUnread = articles.findIndex((a) => !readArticles.includes(a.id));
+              const isCurrent = index === firstUnread;
+              const isLocked = !isRead && !isCurrent;
+              const side = index % 2 === 0 ? "left" : "right";
+              return (
+                <div className={`path-row ${side}`} key={article.id}>
+                  <button
+                    className={`path-node ${isRead ? "done" : isCurrent ? "current" : "locked"}`}
+                    onClick={() => {
+                      if (isLocked) return;
+                      if (article.quiz) setActiveQuiz(article);
+                      else openArticle(article);
+                    }}
+                    disabled={isLocked}
+                  >
+                    {isRead ? "✓" : index + 1}
+                  </button>
+                  <span className="path-label">{article.title}</span>
+                </div>
+              );
+            })
+          )}
+        </section>
+      )}
 
       <nav className="bottom-nav">
         <button className="nav-item" onClick={() => onNavigate("home")}>

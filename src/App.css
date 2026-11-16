@@ -495,3 +495,67 @@ body {
   font-size: 13px;
   max-width: 340px;
 }
+
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.intro-modal {
+  background: #24322e;
+  border-radius: 20px;
+  padding: 28px 22px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+}
+
+.intro-owl {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin-bottom: 12px;
+  animation: float 2.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.intro-modal h2 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #55e5b1;
+}
+
+.intro-modal p {
+  font-size: 14px;
+  color: #c8d6d0;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.intro-btn {
+  background: #55e5b1;
+  color: #10221c;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+}
+
+.intro-btn:hover {
+  opacity: 0.85;
+}
