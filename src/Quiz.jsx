@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Quiz.css";
+import finImage from "./assets/fin.png";
 
 export default function Quiz({ quiz, onBack, onComplete }) {
   const [current, setCurrent] = useState(0);
@@ -9,6 +10,14 @@ export default function Quiz({ quiz, onBack, onComplete }) {
   const [answered, setAnswered] = useState(false);
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [finalCorrect, setFinalCorrect] = useState(0);
+  const [shake, setShake] = useState(false);
+
+  useEffect(() => {
+    if (finished && onComplete) {
+      onComplete(finalCorrect === quiz.length);
+    }
+  }, [finished]);
 
   if (!quiz || quiz.length === 0) {
     return (
@@ -46,30 +55,61 @@ export default function Quiz({ quiz, onBack, onComplete }) {
   }
 
   function handleCheck() {
+    const ok = isAnswerCorrect();
     setAnswered(true);
-    if (isAnswerCorrect()) setCorrectCount((c) => c + 1);
+    if (ok) setCorrectCount((c) => c + 1);
+    else {
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
   }
 
   function handleNext() {
+    const total = correctCount + (isAnswerCorrect() ? 1 : 0);
     if (current + 1 < quiz.length) {
       setCurrent((c) => c + 1);
       resetState();
     } else {
+      setFinalCorrect(total);
       setFinished(true);
-      if (onComplete) onComplete();
     }
   }
 
+  function restart() {
+    setCurrent(0);
+    setCorrectCount(0);
+    setFinalCorrect(0);
+    setFinished(false);
+    resetState();
+  }
+
+  // ===== ФИНАЛЬНЫЙ ЭКРАН =====
   if (finished) {
-    const percent = Math.round((correctCount / quiz.length) * 100);
+    const allCorrect = finalCorrect === quiz.length;
     return (
-      <div className="quiz-page">
+      <div className="quiz-page quiz-page--result">
         <div className="quiz-result">
-          <div className="quiz-result-emoji">{percent >= 70 ? "🎉" : "💪"}</div>
-          <h2>{percent >= 70 ? "Молодец!" : "Попробуй ещё!"}</h2>
-          <p>Правильных ответов: <strong>{correctCount} из {quiz.length}</strong></p>
-          <p className="quiz-percent">{percent}%</p>
-          <button className="quiz-back" onClick={onBack}>← К статьям</button>
+          <img src={finImage} alt="Фин" className="quiz-fin" />
+          <div className="quiz-result-emoji">{allCorrect ? "🎉" : "💪"}</div>
+          <h2>{allCorrect ? "Молодец! Всё правильно!" : "Почти получилось!"}</h2>
+          <p>
+            Правильных ответов: <strong>{finalCorrect} из {quiz.length}</strong>
+          </p>
+
+          <div className="result-stars">
+            {Array.from({ length: quiz.length }).map((_, i) => (
+              <span key={i} className={i < finalCorrect ? "star filled" : "star"}>
+                ★
+              </span>
+            ))}
+          </div>
+
+          {!allCorrect && (
+            <button className="quiz-action" onClick={restart}>
+              Пройти ещё раз 🔁
+            </button>
+          )}
+          <button className="quiz-back" onClick={onBack}>← К курсам</button>
         </div>
       </div>
     );
@@ -79,6 +119,7 @@ export default function Quiz({ quiz, onBack, onComplete }) {
 
   return (
     <div className="quiz-page">
+      {/* прогресс-бар */}
       <div className="quiz-progress-bar">
         <div className="quiz-progress-fill" style={{ width: `${progress}%` }} />
       </div>
@@ -88,19 +129,22 @@ export default function Quiz({ quiz, onBack, onComplete }) {
         <span className="quiz-progress">{current + 1} / {quiz.length}</span>
       </div>
 
-      <h2 className="quiz-question">{q.question}</h2>
+      {/* Вопрос в овальной плашке */}
+      <div className={`quiz-question-bubble ${shake ? "shake" : ""}`}>
+        <h2 className="quiz-question">{q.question}</h2>
+        {q.type === "multiple" && (
+          <p className="quiz-hint">✨ Выбери несколько вариантов</p>
+        )}
+      </div>
 
-      {q.type === "multiple" && <p className="quiz-hint">Выбери несколько вариантов</p>}
-
-      {/* SINGLE / MULTIPLE */}
+      {/* ===== SINGLE / MULTIPLE ===== */}
       {(q.type === "single" || q.type === "multiple") && (
-        <div className={`quiz-options ${q.type === "multiple" ? "multiple" : ""}`}>
+        <div className="quiz-options">
           {q.options.map((option, index) => {
             const isMultiple = q.type === "multiple";
             const isSelected = isMultiple
               ? Array.isArray(selected) && selected.includes(index)
               : selected === index;
-
             let className = "quiz-option";
             if (answered) {
               if (isMultiple) {
@@ -113,7 +157,6 @@ export default function Quiz({ quiz, onBack, onComplete }) {
             } else if (isSelected) {
               className += " selected";
             }
-
             return (
               <button
                 key={index}
@@ -144,63 +187,64 @@ export default function Quiz({ quiz, onBack, onComplete }) {
         </div>
       )}
 
-{q.type === "match" && (
-  <div className="quiz-match">
-    <div className="match-column">
-      {q.left.map((item, i) => {
-        const pairedRight = pairs[i];
-        const colorClass = pairedRight !== undefined ? `pair-color-${i % 5}` : "";
-        return (
-          <button
-            key={i}
-            className={`match-item ${selected === i ? "active" : ""} ${pairedRight !== undefined ? "paired" : ""} ${colorClass}`}
-            onClick={() => {
-              if (answered) return;
-              if (pairs[i] !== undefined) {
-                setPairs((p) => {
-                  const copy = { ...p };
-                  delete copy[i];
-                  return copy;
-                });
-                return;
-              }
-              setSelected(i);
-            }}
-            disabled={answered}
-          >
-            {item}
-          </button>
-        );
-      })}
-    </div>
-    <div className="match-column">
-      {q.right.map((item, j) => {
-        const pairedLeft = Object.keys(pairs).find((k) => pairs[k] === j);
-        const colorClass = pairedLeft !== undefined ? `pair-color-${Number(pairedLeft) % 5}` : "";
-        const isCorrectPair = answered && pairedLeft !== undefined && q.correct[Number(pairedLeft)] === j;
-        const isWrongPair = answered && pairedLeft !== undefined && q.correct[Number(pairedLeft)] !== j;
-        return (
-          <button
-            key={j}
-            className={`match-item ${pairedLeft !== undefined ? "paired" : ""} ${colorClass} ${isCorrectPair ? "correct" : ""} ${isWrongPair ? "wrong" : ""}`}
-            onClick={() => {
-              if (answered) return;
-              if (pairedLeft !== undefined) return;
-              if (selected === null) return;
-              setPairs((p) => ({ ...p, [selected]: j }));
-              setSelected(null);
-            }}
-            disabled={answered}
-          >
-            {item}
-          </button>
-        );
-      })}
-    </div>
-  </div>
-)}
+      {/* ===== MATCH ===== */}
+      {q.type === "match" && (
+        <div className="quiz-match">
+          <div className="match-column">
+            {q.left.map((item, i) => {
+              const pairedRight = pairs[i];
+              const colorClass = pairedRight !== undefined ? `pair-color-${i % 5}` : "";
+              return (
+                <button
+                  key={i}
+                  className={`match-item ${selected === i ? "active" : ""} ${pairedRight !== undefined ? "paired" : ""} ${colorClass}`}
+                  onClick={() => {
+                    if (answered) return;
+                    if (pairs[i] !== undefined) {
+                      setPairs((p) => {
+                        const copy = { ...p };
+                        delete copy[i];
+                        return copy;
+                      });
+                      return;
+                    }
+                    setSelected(i);
+                  }}
+                  disabled={answered}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
+          <div className="match-column">
+            {q.right.map((item, j) => {
+              const pairedLeft = Object.keys(pairs).find((k) => pairs[k] === j);
+              const colorClass = pairedLeft !== undefined ? `pair-color-${Number(pairedLeft) % 5}` : "";
+              const isCorrectPair = answered && pairedLeft !== undefined && q.correct[Number(pairedLeft)] === j;
+              const isWrongPair = answered && pairedLeft !== undefined && q.correct[Number(pairedLeft)] !== j;
+              return (
+                <button
+                  key={j}
+                  className={`match-item ${pairedLeft !== undefined ? "paired" : ""} ${colorClass} ${isCorrectPair ? "correct" : ""} ${isWrongPair ? "wrong" : ""}`}
+                  onClick={() => {
+                    if (answered) return;
+                    if (pairedLeft !== undefined) return;
+                    if (selected === null) return;
+                    setPairs((p) => ({ ...p, [selected]: j }));
+                    setSelected(null);
+                  }}
+                  disabled={answered}
+                >
+                  {item}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
-      {/* BUCKETS */}
+      {/* ===== BUCKETS ===== */}
       {q.type === "buckets" && (
         <div className="quiz-buckets">
           {q.items.map((item, i) => {
@@ -241,12 +285,10 @@ export default function Quiz({ quiz, onBack, onComplete }) {
       )}
 
       {!answered ? (
-        <button className="quiz-action" onClick={handleCheck}>
-          Проверить
-        </button>
+        <button className="quiz-action" onClick={handleCheck}>Проверить ✓</button>
       ) : (
         <button className="quiz-action" onClick={handleNext}>
-          {current + 1 < quiz.length ? "Дальше →" : "Завершить"}
+          {current + 1 < quiz.length ? "Дальше →" : "Завершить 🏁"}
         </button>
       )}
     </div>

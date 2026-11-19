@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Savings.css";
-import piggyBank from "./assets/piggy-bank.png";
 
 function getDateKey(date) {
   const year = date.getFullYear();
@@ -101,68 +100,128 @@ export default function Savings({
   }
 
   return (
-    <div className="app">
-      <header className="header">
+    <div className="savings-page">
+      <header className="savings-header">
         <h1 className="logo">Фин<span>Тин</span></h1>
-        <div className="greeting">
-          <h2>Моя копилка</h2>
-          <p>Каждый шаг приближает к мечте</p>
+        <div className="savings-greeting">
+          <p className="savings-greeting-top">🌿 Моя копилка</p>
+          <h2>Каждый шаг — новый огонёк мечты</h2>
         </div>
       </header>
 
-      <section className="savings-card">
-        <img src={piggyBank} alt="Копилка" />
-        <p className="savings-label">Моя цель</p>
-        <h2>{goalName}</h2>
-        <div className="savings-amount">{saved.toLocaleString("ru-RU")} ₽</div>
-        <p className="savings-muted">из {goal.toLocaleString("ru-RU")} ₽</p>
-        <div className="savings-progress">
-          <div style={{ width: `${progress}%` }} />
+      {/* ===== КОСТЁР ===== */}
+      <section className="fire-card">
+        <div className="fire-stage">
+          {/* поленница */}
+          <div className="fire-logs">
+            <span className="log log-1" />
+            <span className="log log-2" />
+            <span className="log log-3" />
+          </div>
+
+          {/* пламя — 3 слоя */}
+          <div className="fire-flames">
+            <span className={`flame flame-outer ${progress > 0 ? "visible" : ""}`} />
+            <span className={`flame flame-mid ${progress >= 25 ? "visible" : ""}`} />
+            <span className={`flame flame-inner ${progress >= 50 ? "visible" : ""}`} />
+          </div>
+
+          {/* искры — на 75%+ */}
+          {progress >= 75 && (
+            <div className="fire-sparks">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <span key={i} className={`spark spark-${i}`} />
+              ))}
+            </div>
+          )}
+
+          {/* свечение — на 100% */}
+          {goalReached && <div className="fire-glow" />}
+
+          {/* угли */}
+          <div className="fire-embers">
+            <span className="ember ember-1" />
+            <span className="ember ember-2" />
+            <span className="ember ember-3" />
+          </div>
         </div>
-        <p className="savings-percent">{Math.round(progress)}% накоплено</p>
-        <button className="savings-add" onClick={addMoney}>＋ Пополнить копилку</button>
-        <button className="savings-edit" onClick={editGoal}>Изменить цель</button>
+
+        <p className="fire-caption">
+          {goalReached
+            ? "🔥 Костёр горит ярко! Мечта сбылась!"
+            : progress === 0
+            ? "Подкинь дров — начни копить"
+            : `🔥 Костёр разгорается: ${Math.round(progress)}%`}
+        </p>
       </section>
 
-      <section className="savings-info">
+      {/* ===== ЦЕЛЬ ===== */}
+      <section className="goal-card">
+        <p className="goal-label">Моя цель</p>
+        <h2 className="goal-name">{goalName}</h2>
+        <div className="goal-amount">{saved.toLocaleString("ru-RU")} ₽</div>
+        <p className="goal-muted">из {goal.toLocaleString("ru-RU")} ₽</p>
+
+        <div className="goal-progress">
+          <div className="goal-progress-fill" style={{ width: `${progress}%` }} />
+        </div>
+        <p className="goal-percent">{Math.round(progress)}% накоплено</p>
+
+        <button className="goal-add" onClick={addMoney}>
+           Пополнить копилку
+        </button>
+        <button className="goal-edit" onClick={editGoal}>
+           Изменить цель
+        </button>
+      </section>
+
+      {/* ===== ОСТАЛОСЬ ===== */}
+      <section className="remaining-card">
         {goalReached ? (
           <>
-            <p>Цель достигнута 🎉</p>
-            <h2>Ты молодец!</h2>
+            <p className="remaining-label">Цель достигнута 🎉</p>
+            <h2 className="remaining-value">Ты молодец!</h2>
           </>
         ) : (
           <>
-            <p>Осталось накопить</p>
-            <h2>{Math.max(goal - saved, 0).toLocaleString("ru-RU")} ₽</h2>
+            <p className="remaining-label">Осталось накопить</p>
+            <h2 className="remaining-value">
+              {Math.max(goal - saved, 0).toLocaleString("ru-RU")} ₽
+            </h2>
           </>
         )}
       </section>
 
-      <section className="savings-history">
-        <h2>История операций</h2>
+      {/* ===== ИСТОРИЯ ===== */}
+      <section className="history-card">
+        <h2 className="history-title">🍃 История операций</h2>
         {history.length === 0 ? (
           <p className="history-empty">Здесь пока нет операций. Пополни копилку!</p>
         ) : (
           history.map((item) => (
             <div className="history-item" key={item.id}>
-              <div>
+              <div className="history-icon">💰</div>
+              <div className="history-info">
                 <strong>Пополнение копилки</strong>
                 <p>{item.date} · {item.time}</p>
               </div>
-              <strong className="history-amount">+{Number(item.amount).toLocaleString("ru-RU")} ₽</strong>
+              <strong className="history-amount">
+                +{Number(item.amount).toLocaleString("ru-RU")} ₽
+              </strong>
             </div>
           ))
         )}
       </section>
 
+      {/* ===== ПРАЗДНИК ===== */}
       {showCelebration && (
         <div className="celebration-overlay" onClick={handleDismissCelebration}>
           <div className="celebration-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="celebration-emoji">🎉</div>
+            <div className="celebration-emoji">🔥✨</div>
             <h2>Ты молодец!</h2>
             <p>
               Ты накопил {saved.toLocaleString("ru-RU")} ₽ на «{goalName}».
-              Хочешь начать копить на новую мечту?
+              Костёр мечты горит ярко! Хочешь зажечь новый?
             </p>
             <div className="celebration-actions">
               <button className="celebration-yes" onClick={handleStartNewGoal}>
@@ -176,6 +235,7 @@ export default function Savings({
         </div>
       )}
 
+      {/* ===== НАВИГАЦИЯ ===== */}
       <nav className="bottom-nav">
         <button className="nav-item" onClick={() => onNavigate("home")}>
           <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V21h-6v-6H9v6H3z" /></svg>

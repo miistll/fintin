@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Operations from "./Operations";
-import piggyBank from "./assets/piggy-bank.png";
+
 import "./App.css";
 import Savings from "./Savings";
 import Profile from "./Profile";
@@ -38,6 +38,7 @@ export default function App() {
 
   const [displayName, setDisplayName] = useState("");
   const [readArticles, setReadArticles] = useState([]);
+  const [passedTests, setPassedTests] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [hasSeenIntro, setHasSeenIntro] = useState(false);
   const [showIntro, setShowIntro] = useState(false);
@@ -75,6 +76,7 @@ export default function App() {
       setExpenseHistory(Array.isArray(d.expenseHistory) ? d.expenseHistory : []);
       setDisplayName(d.displayName || "");
       setReadArticles(Array.isArray(d.readArticles) ? d.readArticles : []);
+      setPassedTests(Array.isArray(d.passedTests) ? d.passedTests : []);
       setAchievements(Array.isArray(d.achievements) ? d.achievements : []);
       setHasSeenIntro(d.hasSeenIntro || false);
       if (!d.hasSeenIntro) setShowIntro(true);
@@ -89,7 +91,7 @@ export default function App() {
     if (!userId || loadedUserId !== userId) return;
     const dataToSave = {
       savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory,
-      displayName, readArticles, achievements, hasSeenIntro,
+      displayName, readArticles, passedTests, achievements, hasSeenIntro,
     };
     const timeoutId = setTimeout(async () => {
       const { error } = await supabase.from("user_data").upsert(
@@ -99,7 +101,7 @@ export default function App() {
       if (error) console.error("Ошибка сохранения:", error);
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [session?.user?.id, loadedUserId, savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory, displayName, readArticles, achievements, hasSeenIntro]);
+  }, [session?.user?.id, loadedUserId, savedAmount, goal, goalName, savingsHistory, incomeHistory, expenseHistory, displayName, readArticles, passedTests, achievements, hasSeenIntro]);
 
   const selectedDateObject = new Date(selectedDate);
   const selectedDateKey = getDateKey(selectedDateObject);
@@ -182,6 +184,8 @@ export default function App() {
           onNavigate={setActivePage}
           readArticles={readArticles}
           onArticleRead={(id) => setReadArticles((prev) => prev.includes(id) ? prev : [...prev, id])}
+          passedTests={passedTests}
+          onTestPassed={(id) => setPassedTests((prev) => prev.includes(id) ? prev : [...prev, id])}
         />
       ) : (
         <>
@@ -228,7 +232,7 @@ export default function App() {
           <section className="piggy-card">
             <h2 className="piggy-title">Моя копилка</h2>
             <div className="piggy-content">
-              <img src={piggyBank} alt="Копилка" className="piggy-image" />
+
               <div className="piggy-info">
                 <div className="piggy-goal"><span>Цель</span><strong>{goalName}</strong></div>
                 <div className="piggy-saved"><span>Сколько накоплено</span><strong>{savedAmount.toLocaleString("ru-RU")} ₽ из {goal.toLocaleString("ru-RU")} ₽</strong></div>
